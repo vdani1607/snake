@@ -80,6 +80,7 @@ function moveSnake()
 	{
 		collisionTable = [];
 		snakarray = [0];
+		buffer = Array(bufferSize).fill(false);
 	}
 	console.log(snakarray);
 
@@ -121,16 +122,24 @@ document.addEventListener('keydown', logKey);
  function logKey(e)
     {
 	if (`${e.code}` == "ArrowRight") {
-		snakeDirection = 0;
+		if (snakeDirection != 1) {
+			snakeDirection = 0;
+		}
 	}
 	if (`${e.code}` == "ArrowLeft") {
-		snakeDirection = 1;
+		if (snakeDirection != 0) {
+			snakeDirection = 1;
+		}
 	}
 	if (`${e.code}` == "ArrowDown") {
-		snakeDirection = 2;
+		if (snakeDirection != 3) {
+			snakeDirection = 2;
+		}
 	}
 	if (`${e.code}` == "ArrowUp") {
-		snakeDirection = 3;
+		if (snakeDirection != 2) {
+			snakeDirection = 3;
+		}
 	}
     }
 
