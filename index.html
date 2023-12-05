@@ -78,12 +78,23 @@ function moveSnake()
 	updateCollisionTable();
 	if (collisionTable[snakHead] == true)
 	{
-		collisionTable = [];
-		snakarray = [0];
-		buffer = Array(bufferSize).fill(false);
+		resetGame();
+	}
+	if (snakHead > 255) {
+		resetGame();
+	}
+	if (snakHead < 0) {
+		resetGame();
 	}
 	console.log(snakarray);
 
+}
+
+function resetGame()
+{
+	collisionTable = [];
+	snakarray = [0];		
+	buffer = Array(bufferSize).fill(false);
 }
 
 function eatFood(){
