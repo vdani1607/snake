@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+<body>
+<canvas id="gameCanvas" width="800" height="800" style="border:1px solid black;"></canvas>
+</body>
+<script>
+
+const screenX = 800;
+const screenY = 800;
+const bufferSize = 256;
+buffer = Array(bufferSize).fill(false);
+collisionTable = Array(256).fill(false);
+drawSize = 50;
+
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d")
+
+snakarray = [0];
+snakeDirection = 0;
+snakHead = snakarray[0];
+food = randomInteger(0, 255);
+
+function randomInteger(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function updateBuffer()
+{
+	for (let index = 0; index < snakarray.length; index++)
+	{
+		address = snakarray[index];
+		buffer[address] = true;
+	}
+	buffer[food] = true;
+}
+
+function updateCollisionTable()
+{
+	for (let index = 1; index < snakarray.length; index++)
+	{
+		address = snakarray[index];
+		collisionTable[address] = true;
+	}
+}
+
+function moveSnake()
+{
+	if (snakeDirection == 0)
+	{
+		newHead = snakarray[0] + 1;
+	}
+	if (snakeDirection == 1)
+	{
+		newHead = snakarray[0] - 1;
+	}
+	if (snakeDirection == 2) 
+	{
+		newHead = snakarray[0] + 16;
+	}
+	if (snakeDirection == 3)
+	{
+		newHead = snakarray[0] - 16;
+	}
+	if (snakarray[0] != food)
+	{
+		lastEl = snakarray.pop();
+		buffer[lastEl] = false;
+		collisionTable[lastEl] = false;
+	}
+	else {
+		eatFood();
+	}
+	snakarray.unshift(newHead);
+	snakHead = snakarray[0];
+	updateCollisionTable();
+	if (collisionTable[snakHead] == true)
+	{
+		collisionTable = [];
+		snakarray = [0];
+	}
+	console.log(snakarray);
+
+}
+
+function eatFood(){
+	food = randomInteger(0, 255);
+}
+
+function drawLoop()
+{
+	drawX=0;
+	drawY=0;
+	for(let a=0; a<bufferSize; a++)
+	{
+		if (buffer[a] == false) {
+			ctx.fillStyle = "#000000";
+		}
+		else {
+			ctx.fillStyle = "#FFFFFF";
+		}
+		if (drawX+drawSize == screenX) {
+			ctx.fillRect(drawX, drawY, drawSize, drawSize);
+			drawX = 0;
+			drawY += drawSize;
+		}
+		else {
+			ctx.fillRect(drawX, drawY, drawSize, drawSize);
+			drawX+=drawSize;
+		}
+	}
+}
+
+setInterval(drawLoop, 50);
+setInterval(updateBuffer, 50);
+setInterval(moveSnake, 150);
+
+document.addEventListener('keydown', logKey);
+ function logKey(e)
+    {
+	if (`${e.code}` == "ArrowRight") {
+		snakeDirection = 0;
+	}
+	if (`${e.code}` == "ArrowLeft") {
+		snakeDirection = 1;
+	}
+	if (`${e.code}` == "ArrowDown") {
+		snakeDirection = 2;
+	}
+	if (`${e.code}` == "ArrowUp") {
+		snakeDirection = 3;
+	}
+    }
+
+</script>
+
+</html>
